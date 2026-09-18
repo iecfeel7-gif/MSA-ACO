@@ -18,13 +18,13 @@ This repository contains the implementation, TSPLIB benchmark files, and result 
 - `instances/`: the 35 TSPLIB instance files.
 - `data/reported_main_results_35.csv`: manuscript-reported summary results for the 35-instance comparison.
 - `data/reported_main_results_long.csv`: normalized long-form representation of the manuscript-reported summary table.
-- `data/main_runs_reconciled.csv`: retained long-form run records with provenance annotations for the documented archival discrepancies.
+- `data/main_runs_reconciled.csv`:  retained long-form run records with archival provenance annotations.
 - `data/derived_summary_from_reconciled_runs.csv`: descriptive summary recalculated from the provenance-annotated run records.
 - `data/rerun_seed_manifest.csv`: deterministic seeds reconstructed from the original experiment scripts.
 - `data/instance_manifest.csv`: instance dimensions, edge-weight categories and formats, BKS values, and SHA-256 checksums.
-- `provenance/correction_log.csv`: documentation of the documented archival discrepancies and the corresponding retained and manuscript-reported values.
+- `provenance/correction_log.csv`: provenance record linking retained archival values with the corresponding manuscript-reported values.
 - `provenance/explicit_instance_validation.csv`: independent verification of the two `EXPLICIT` instances against the archived best paths.
-- `DATA_NOTES.md`: detailed notes on archived run-level records, data provenance, and documented archival discrepancies.
+- `DATA_NOTES.md`: detailed notes on archived run-level records and data provenance.
 - `validate_package.py`: structural and consistency checks for the main-experiment package.
 - `MANIFEST.sha256`: SHA-256 checksums for the files in the main-experiment package.
 
@@ -34,9 +34,9 @@ The implementation follows the edge-weight type declared inside each submitted p
 
 ## Data notes
 
-Additional information on the retained run-level records, data provenance, and documented archival discrepancies is provided in `DATA_NOTES.md`.
+Additional information on retained run-level records and data provenance is provided in `DATA_NOTES.md`.
 
-The repository distinguishes manuscript-reported summary results from retained archival run-level records. Where an archival discrepancy is documented, both the retained value and the manuscript-reported value are preserved explicitly for traceability. Unavailable run identifiers and timing values are not reconstructed or inferred.
+The repository distinguishes manuscript-reported summary results from retained archival run-level records. Relevant provenance information is preserved explicitly for traceability. Unavailable run identifiers and timing values are not reconstructed or inferred.
 
 ## Environment
 
