@@ -1,6 +1,6 @@
 # MSA-ACO main-experiment reproducibility package
 
-This package contains the implementation, TSPLIB benchmark files, and result records used for the 35-instance main comparison of ACS, MMAS, and MSA-ACO. The additional controlled experiments are distributed separately in the supplementary archive.
+This repository contains the implementation, TSPLIB benchmark files, and result records for the 35-instance main comparison of ACS, MMAS, and MSA-ACO. Additional controlled experiments and their supporting records are provided separately in `MSA-ACO-supplementary-material.zip`.
 
 ## Scope
 
@@ -16,32 +16,27 @@ This package contains the implementation, TSPLIB benchmark files, and result rec
 - `summarize_results.py`: descriptive summary generator.
 - `source/`: algorithm implementation and parameter rules.
 - `instances/`: the 35 TSPLIB instance files.
-- `data/reported_main_results_35.csv`: authoritative values reported in the manuscript.
-- `data/reported_main_results_long.csv`: normalized long form of the reported table.
-- `data/main_runs_reconciled.csv`: 1,050 run records after reconciliation to the manuscript.
-- `data/derived_summary_from_reconciled_runs.csv`: summary recalculated from the reconciled run records.
+- `data/reported_main_results_35.csv`: manuscript-reported summary results for the 35-instance comparison.
+- `data/reported_main_results_long.csv`: normalized long-form representation of the manuscript-reported summary table.
+- `data/main_runs_reconciled.csv`: retained long-form run records with provenance annotations for the documented archival discrepancies.
+- `data/derived_summary_from_reconciled_runs.csv`: descriptive summary recalculated from the provenance-annotated run records.
 - `data/rerun_seed_manifest.csv`: deterministic seeds reconstructed from the original experiment scripts.
 - `data/instance_manifest.csv`: instance dimensions, edge-weight categories and formats, BKS values, and SHA-256 checksums.
-- `provenance/correction_log.csv`: the two recovered observations and their archived values.
-- `provenance/reconciliation_report.csv`: group-level comparison between archived, reconciled, and reported best values.
+- `provenance/correction_log.csv`: documentation of the documented archival discrepancies and the corresponding retained and manuscript-reported values.
 - `provenance/explicit_instance_validation.csv`: independent verification of the two `EXPLICIT` instances against the archived best paths.
-- `validate_package.py`: structural and consistency checks for the submitted package.
-- `MANIFEST.sha256`: checksums for all submitted files.
+- `DATA_NOTES.md`: detailed notes on archived run-level records, data provenance, and documented archival discrepancies.
+- `validate_package.py`: structural and consistency checks for the main-experiment package.
+- `MANIFEST.sha256`: SHA-256 checksums for the files in the main-experiment package.
 
 ## Instance and distance conventions
 
 The implementation follows the edge-weight type declared inside each submitted problem file. For `EUC_2D`, nonnegative Euclidean distances are converted to integer edge weights as `int(distance + 0.5)`, which is the TSPLIB nearest-integer rule. For `GEO`, coordinates are converted from the TSPLIB `DDD.MM` representation before the standard spherical distance formula with radius 6378.388 is applied. For `EXPLICIT`, the matrix is loaded directly from `EDGE_WEIGHT_SECTION`; `bayg29` uses `UPPER_ROW` and `swiss42` uses `FULL_MATRIX`. The distance matrix is constructed once before optimization and reused throughout the run.
 
-## Data reconciliation
+## Data notes
 
-The manuscript's 35-instance main-results table is the authoritative report of the completed experiments. The archived long-form export contained all 1,050 expected rows, but two MSA-ACO best observations were not preserved correctly:
+Additional information on the retained run-level records, data provenance, and documented archival discrepancies is provided in `DATA_NOTES.md`.
 
-- `ch130.tsp`: archived minimum 6131; reported observed best 6115.
-- `ts225.tsp`: archived minimum 126726; reported observed best 126643.
-
-In `main_runs_reconciled.csv`, each recovered value is assigned to the archived row that previously held the group minimum. The original archived value remains in `archived_best_length`, and `record_provenance` identifies the recovery. The original run identifier of each recovered observation was unavailable, so the assigned run number must not be interpreted as newly recovered provenance. No other solution-quality value was changed.
-
-Archived MSA-ACO timing values were unavailable and remain blank. New executions record initialization, solver, and end-to-end times separately; no timing values were inferred.
+The repository distinguishes manuscript-reported summary results from retained archival run-level records. Where an archival discrepancy is documented, both the retained value and the manuscript-reported value are preserved explicitly for traceability. Unavailable run identifiers and timing values are not reconstructed or inferred.
 
 ## Environment
 
