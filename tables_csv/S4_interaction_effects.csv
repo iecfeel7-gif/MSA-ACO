@@ -1,8 +1,0 @@
-Effect,Final-length contrast,Direction,Paired runs,Raw p,Holm-adjusted p
-GA,-0.875,Negative main-effect contrast,10,0.1953125,0.9765625
-SW,0.025,Positive main-effect contrast,10,0.6875,1.0
-RANK,-1.375,Negative main-effect contrast,10,0.13671875,0.8203125
-GA x SW,0.075,Positive interaction contrast,10,0.64453125,1.0
-GA x RANK,1.375,Positive interaction contrast,10,0.03125,0.21875
-SW x RANK,0.075,Positive interaction contrast,10,0.8125,1.0
-GA x SW x RANK,0.125,Positive interaction contrast,10,0.734375,1.0

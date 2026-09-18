@@ -1,5 +1,0 @@
-Instance,Config hash,scaleAwareEnabled,segmentParametersEnabled,maxIterations,numAnts,kCandidates,twoOptCandK,twoOptMaxIter,threeOptMaxIter,ls_top_frac,ls_threeopt_topk,hybrid_switch_iter,hybrid_random_min_iter,hybrid_random_max_iter,rank_m,rank_w_gb,q0_start,q0_end,alpha,beta,rho,xi
-ulysses22.tsp,018a8be4c8e2beb7,false,false,150,25,21,21,120,80,0.1,1,60,45,75,6,6.0,0.8,0.98,1.8,2.8,0.1,0.04
-st70.tsp,62510519189f2744,false,false,150,56,25,25,120,80,0.1,1,60,45,75,6,6.0,0.8,0.98,1.8,2.8,0.1,0.04
-kroC100.tsp,23e6f34c76eaf7d1,false,false,300,80,25,25,120,80,0.1,2,105,75,135,8,8.0,0.8,0.98,1.8,2.8,0.1,0.04
-kroA150.tsp,bdf8690b5c34df07,false,false,300,120,25,25,120,80,0.1,2,105,75,135,12,12.0,0.8,0.98,1.8,2.8,0.1,0.04

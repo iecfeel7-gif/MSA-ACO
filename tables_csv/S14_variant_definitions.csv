@@ -1,8 +1,0 @@
-Variant,Definition
-No GA,GA initialization is disabled and the pheromone matrix is initialized uniformly at tauMin.
-Fixed SW,"Entropy-triggered switching is replaced by a fixed switch at the scale-specific center iteration: 60 for ulysses22 and st70, and 105 for kroC100 and kroA150."
-No Rank,Rank-based reinforcement is disabled and the top 20% of tours deposit pheromone equally with weight 1/L.
-No 2-opt,Candidate-restricted 2-opt is disabled.
-No 3-opt,Candidate-restricted 3-opt is disabled.
-Fixed 3-opt,Entropy-based 3-opt adaptation is disabled and threeOptMaxIter is fixed at 80.
-No Scale,"scaleAwareEnabled and segmentParametersEnabled are set to false. The instance-specific base configurations are retained without the scale-profile and segment-override layers; exact values and configuration hashes are reported in Table S14a and protocols/configs/."

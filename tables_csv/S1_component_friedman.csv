@@ -1,5 +1,0 @@
-Instance,Friedman chi-square,df,p-value,Kendall's W,Interpretation
-ulysses22,,,,,Not testable: all configurations are identical
-st70,23.871257485029957,7,0.0012002547518528638,0.2273453093812377,Significant omnibus difference
-kroC100,10.333333333333885,7,0.17045749932350848,0.09841269841270367,No significant omnibus difference
-kroA150,68.9602859412232,7,2.3960933202266012e-12,0.6567646280116496,Significant omnibus difference
