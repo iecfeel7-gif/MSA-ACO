@@ -1,10 +1,11 @@
 # MSA-ACO main-experiment reproducibility package
 
-This package contains the implementation, TSPLIB instances, and result records used for the 35-instance main comparison of ACS, MMAS, and MSA-ACO. Ablation, interaction, sensitivity, boundary, and reviewer-only experiments are intentionally excluded.
+This package contains the implementation, TSPLIB benchmark files, and result records used for the 35-instance main comparison of ACS, MMAS, and MSA-ACO. The additional controlled experiments are distributed separately in the supplementary archive.
 
 ## Scope
 
 - 35 symmetric TSPLIB instances, in the same order as the manuscript.
+- 29 `EUC_2D` instances, four `GEO` instances, and two `EXPLICIT` instances.
 - ACS, MMAS, and MSA-ACO.
 - 10 independent runs per instance and algorithm in the archived main comparison.
 - Sequential CPU execution is the default for new runs.
@@ -20,10 +21,16 @@ This package contains the implementation, TSPLIB instances, and result records u
 - `data/main_runs_reconciled.csv`: 1,050 run records after reconciliation to the manuscript.
 - `data/derived_summary_from_reconciled_runs.csv`: summary recalculated from the reconciled run records.
 - `data/rerun_seed_manifest.csv`: deterministic seeds reconstructed from the original experiment scripts.
-- `data/instance_manifest.csv`: instance dimensions, BKS values, and SHA-256 checksums.
+- `data/instance_manifest.csv`: instance dimensions, edge-weight categories and formats, BKS values, and SHA-256 checksums.
 - `provenance/correction_log.csv`: the two recovered observations and their archived values.
 - `provenance/reconciliation_report.csv`: group-level comparison between archived, reconciled, and reported best values.
+- `provenance/explicit_instance_validation.csv`: independent verification of the two `EXPLICIT` instances against the archived best paths.
+- `validate_package.py`: structural and consistency checks for the submitted package.
 - `MANIFEST.sha256`: checksums for all submitted files.
+
+## Instance and distance conventions
+
+The implementation follows the edge-weight type declared inside each submitted problem file. For `EUC_2D`, nonnegative Euclidean distances are converted to integer edge weights as `int(distance + 0.5)`, which is the TSPLIB nearest-integer rule. For `GEO`, coordinates are converted from the TSPLIB `DDD.MM` representation before the standard spherical distance formula with radius 6378.388 is applied. For `EXPLICIT`, the matrix is loaded directly from `EDGE_WEIGHT_SECTION`; `bayg29` uses `UPPER_ROW` and `swiss42` uses `FULL_MATRIX`. The distance matrix is constructed once before optimization and reused throughout the run.
 
 ## Data reconciliation
 
@@ -76,5 +83,12 @@ python summarize_results.py results/rerun/runs.csv results/rerun/summary.csv
 - Baseline ACS and MMAS use uniform pheromone initialization and no local search, matching the original main-comparison protocol.
 - MSA-ACO uses GA initialization, the entropy-aligned MMAS-to-ACS transition, rank-based reinforcement, and scale-dependent 2-opt/3-opt settings.
 - Each output row records the seed, configuration hash, engine mode, verified tour length, and timing components.
-- Random seeds are independent of execution order.
+- `EXPLICIT` instances are read directly from `EDGE_WEIGHT_SECTION` using their declared `UPPER_ROW` or `FULL_MATRIX` format.
+- Random seeds are independent of execution order. With base seed 20251110, the archived ACS and MMAS runs use `seed = base + 10000*instance_index + 1000*algorithm_index + run_index`, where the algorithm index is 1 for ACS and 2 for MMAS. The archived MSA-ACO runs use the original solver rule `seed = base + 1000*instance_index + run_index - 1`.
 - Seed derivation preserves the instance indices used by the original experiment; the omitted `brg180.tsp` position remains reserved so later-instance seeds do not shift.
+
+Run the package checks with:
+
+```bash
+python validate_package.py
+```

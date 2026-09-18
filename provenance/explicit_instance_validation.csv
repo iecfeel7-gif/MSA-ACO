@@ -1,0 +1,3 @@
+instance,edge_weight_type,edge_weight_format,runs_checked,first_off_diagonal_distance,recomputed_best,recomputed_mean,reported_best,status
+bayg29.tsp,EXPLICIT,UPPER_ROW,10,97,1610,1610.0,1610,PASS
+swiss42.tsp,EXPLICIT,FULL_MATRIX,10,15,1273,1273.0,1273,PASS
