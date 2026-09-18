@@ -1,0 +1,15 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "wilcoxon": "two-sided exact conditional sign permutation; zero differences removed; tied absolute differences use average ranks",
+  "friedman": "custom rank implementation with within-block tie correction; chi-square tail from a deterministic incomplete-gamma routine",
+  "holm_families": {
+    "S2": 28,
+    "S4": 7,
+    "S6": 8,
+    "S8": 12,
+    "S10": 4
+  },
+  "confidence_intervals": "percentile bootstrap of the mean; 5000 resamples; SHA-256-derived deterministic seed from instance|variant",
+  "switch_quality": "Spearman rho; exact two-sided permutation over the observed multiset of final tour lengths when both variables vary"
+}

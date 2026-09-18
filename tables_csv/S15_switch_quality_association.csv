@@ -1,0 +1,5 @@
+Instance,Runs,Minimum switch iteration,Median switch iteration,Maximum switch iteration,Unique final tour lengths,Spearman rho,Exact two-sided permutation p,Interpretation
+ulysses22,15,47,52.0,56,1,,,Not estimable: final tour length is constant
+st70,15,47,53.0,58,3,-0.4095870923745609,0.14065934065934066,No statistically significant monotonic association
+kroC100,15,77,80.0,97,1,,,Not estimable: final tour length is constant
+kroA150,15,135,135.0,135,12,,,Not estimable: switching iteration is constant

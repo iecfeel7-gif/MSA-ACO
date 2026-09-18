@@ -1,62 +1,80 @@
 from __future__ import annotations
 
-import ast
 import csv
 import hashlib
-from collections import Counter, defaultdict
+import json
+import subprocess
+import sys
+from collections import Counter
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
 
 
-def read_csv(relative_path: str) -> list[dict[str, str]]:
-    with (ROOT / relative_path).open("r", encoding="utf-8-sig", newline="") as handle:
-        return list(csv.DictReader(handle))
+EXPECTED_ROWS = {
+    "component_ablation_runs.csv": 480,
+    "interaction_runs.csv": 80,
+    "equal_distance_budget_runs.csv": 180,
+    "switching_control_runs.csv": 240,
+    "boundary_lower_runs.csv": 15,
+    "boundary_upper_runs.csv": 15,
+    "sequential_timing_runs.csv": 160,
+    "segmented_vs_fixed1000_runs.csv": 80,
+}
+
+
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    if not rows:
+        raise ValueError(f"Empty CSV: {path.relative_to(ROOT)}")
+    return rows
+
+
+def config_hash(value: dict) -> str:
+    payload = json.dumps(value, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()[:16]
 
 
 def main() -> None:
-    instance_files = sorted((ROOT / "instances").glob("*.tsp"))
-    assert len(instance_files) == 35, f"Expected 35 problem files, found {len(instance_files)}"
+    all_rows = []
+    for name, expected in EXPECTED_ROWS.items():
+        rows = read_csv(ROOT / "data" / name)
+        assert len(rows) == expected, f"{name}: expected {expected} rows, found {len(rows)}"
+        all_rows.extend((name, row) for row in rows)
+        keys = [(row.get("instance", row.get("TSP", "")), row.get("variant", row.get("Budget", "")), row.get("run", row.get("Run", ""))) for row in rows]
+        assert len(keys) == len(set(keys)), f"Duplicate run keys in {name}"
 
-    reported = read_csv("data/reported_main_results_long.csv")
-    runs = read_csv("data/main_runs_reconciled.csv")
-    summary = read_csv("data/derived_summary_from_reconciled_runs.csv")
-    seeds = read_csv("data/rerun_seed_manifest.csv")
-    corrections = read_csv("provenance/correction_log.csv")
-    reconciliation = read_csv("provenance/reconciliation_report.csv")
+    assert sum(EXPECTED_ROWS.values()) == 1250
 
-    assert len(reported) == 105
-    assert len(runs) == 1050
-    assert len(summary) == 105
-    assert len(seeds) == 1050
-    assert len(reconciliation) == 105
-    assert Counter(row["algorithm"] for row in runs) == {"ACS": 350, "MMAS": 350, "MSA-ACO": 350}
+    for path in sorted(ROOT.rglob("*.json")):
+        json.loads(path.read_text(encoding="utf-8"))
+    for path in sorted(ROOT.rglob("*.csv")):
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            parsed = list(csv.reader(handle))
+        widths = Counter(len(row) for row in parsed)
+        assert len(widths) == 1, f"Inconsistent CSV width in {path.relative_to(ROOT)}: {dict(widths)}"
 
-    groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
-    for row in runs:
-        groups[(row["instance"], row["algorithm"])].append(row)
-    assert all(len(group) == 10 for group in groups.values())
-    reported_best = {(row["instance"], row["algorithm"]): float(row["reported_best"]) for row in reported}
-    assert all(min(float(row["best_length"]) for row in group) == reported_best[key] for key, group in groups.items())
+    mapping_rows = read_csv(ROOT / "protocols" / "config_hash_mapping.csv")
+    mapping = {row["recorded_config_hash"]: row for row in mapping_rows}
+    referenced = {row.get("config_hash", "") for _, row in all_rows if row.get("config_hash", "")}
+    assert referenced == set(mapping), "Configuration mapping does not cover every recorded config_hash"
+    for row in mapping_rows:
+        path = ROOT / "protocols" / "configs" / f"{row['canonical_config_hash']}.json"
+        assert path.is_file(), f"Missing canonical configuration: {path.name}"
+        actual = config_hash(json.loads(path.read_text(encoding="utf-8")))
+        assert actual == row["canonical_config_hash"], f"Canonical configuration hash mismatch: {path.name}"
 
-    assert {(row["instance"], row["algorithm"]) for row in corrections} == {
-        ("ch130.tsp", "MSA-ACO"),
-        ("ts225.tsp", "MSA-ACO"),
-    }
-    assert Counter(row["status"] for row in reconciliation) == {"MATCH": 103, "RECOVERED_FROM_MANUSCRIPT": 2}
-    seed_lookup = {(row["instance"], row["algorithm"], int(row["run"])): int(row["derived_seed"]) for row in seeds}
-    for row in seeds:
-        algorithm = row["algorithm"]
-        scheme = row["seed_scheme"]
-        if algorithm == "MSA-ACO":
-            assert scheme == "base+instance_index*1000+run_index-1"
-        else:
-            assert scheme == "base+instance_index*10000+algorithm_index*1000+run_index"
-    assert len(seed_lookup) == 1050
-
-    for path in [ROOT / "run_main_experiments.py", ROOT / "summarize_results.py", *(ROOT / "source").glob("*.py")]:
-        ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    completed = subprocess.run(
+        [sys.executable, str(ROOT / "analysis" / "reproduce_supplementary_statistics.py"), "--check"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if completed.returncode:
+        raise RuntimeError(completed.stdout + completed.stderr)
 
     manifest = {}
     with (ROOT / "MANIFEST.sha256").open("r", encoding="utf-8") as handle:
@@ -73,7 +91,7 @@ def main() -> None:
         actual = hashlib.sha256((ROOT / relative_path).read_bytes()).hexdigest()
         assert actual == expected_digest, f"Checksum mismatch: {relative_path}"
 
-    print("PASS: package structure, 1,050 runs, seed schemes, reported minima, source syntax, and checksums verified.")
+    print("PASS: 1,250 run-level records, CSV/JSON structure, configuration mapping, statistical tables, and checksums verified.")
 
 
 if __name__ == "__main__":

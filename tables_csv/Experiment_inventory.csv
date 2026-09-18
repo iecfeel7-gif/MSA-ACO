@@ -1,0 +1,9 @@
+Experiment,Run-level records,Instances,Configurations / conditions,Runs per cell,Raw-data file
+Component-wise ablation,480,4,8,15,data/component_ablation_runs.csv
+Focused interaction,80,1,8,10,data/interaction_runs.csv
+Equal distance-query budget,180,4,3,15,data/equal_distance_budget_runs.csv
+Switching control,240,4,4,15,data/switching_control_runs.csv
+Boundary sensitivity,30,2,3,5,data/boundary_lower_runs.csv; data/boundary_upper_runs.csv
+Sequential timing,160,4,8,5,data/sequential_timing_runs.csv
+Segmented vs fixed 1000,80,4,2,10,data/segmented_vs_fixed1000_runs.csv
+Total,1250,,,,

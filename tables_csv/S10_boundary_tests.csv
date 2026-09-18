@@ -1,0 +1,5 @@
+Instance,Reference,Comparator,Paired runs,Reference better,Ties,Reference worse,Raw p,Holm-adjusted p,Rank-biserial correlation
+lin105,MSA-boundaries-120-170,MSA-boundaries-100-170,5,0,5,0,1.0,1.0,0.0
+lin105,MSA-boundaries-120-170,MSA-boundaries-140-170,5,0,5,0,1.0,1.0,0.0
+ch150,MSA-boundaries-120-170,MSA-boundaries-120-140,5,3,0,2,0.625,1.0,-0.3333333333333333
+ch150,MSA-boundaries-120-170,MSA-boundaries-120-200,5,0,5,0,1.0,1.0,0.0
